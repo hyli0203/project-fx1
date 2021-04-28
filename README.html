@@ -1,0 +1,853 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Project name: Research on the FX market based on its volatility</title><meta name="generator" content="MATLAB 8.4"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-04-30"><meta name="DC.source" content="./readmeExtras/README.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Project name: Research on the FX market based on its volatility</h1><!--introduction--><p>Author: Peter Hsin-Yen Lee Date: 2018/4/29</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Introduction</a></li><li><a href="#2">Part1 - Historical data processing</a></li><li><a href="#9">Part2 - Basic plotting</a></li><li><a href="#13">Part3 - Find a suitable time to start the analysis</a></li><li><a href="#14">Part4 - Pattern recognition within the study time range 1</a></li><li><a href="#15">Part5 - Pattern recognition within the study time range 2</a></li><li><a href="#16">Part6 - Apply this result to the stock market</a></li></ul></div><h2>Introduction<a name="1"></a></h2><p>Forex (FX) market is the largest market in the world, and it is traded 24 hours except for weekends. The number of traders involved, and the actions taken by every central bank and commercial bank, make it notorious for its volatility. Most day traders, swing traders, and scalpers gain their profit when the market starts to move, or to have a obvious direction, instead of bouncing back and forth. So an important information for markets without trading hours and without trading volumes would be when most traders start trading, and this can be measured by the volatility. There are some statistical indicators, for example, the Bollinger band, measuring the volatility of the market, and most of the strategies focus on confirming the breakouts and determine the entry point. It is acted as a supporting indicator, and is suggested that we combine this with other major indicators to build a trading system. However, the volatility in the FX market does provide us some interesting facts on different time frames. The project starts from the analysis of volatility, looks for some statistical facts based on different currency pairs in different time frames, and further finds patterns within each time. The following code analyze six currency pairs (EURUSD, AUDUSD, EURJPY, GBPJPY, GBPUSD, USDJPY) and XAUUSD, which is the price of gold. All these data, except for AUDUSD, contain the 1-min price starting from 2000/1/1. Data of every 15 mins is extracted, and calculations of moving average and moving standard deviation are made. Some plots are drawn with some notes taken. For further work, a pattern recognition at certain volatility values to find similarities in particular currency pairs. This can further be applied to the stock market, but the time frame needs to be adjusted, and this is also considered as a future project.</p><h2>Part1 - Historical data processing<a name="2"></a></h2><p>EURUSD Loading files and processing them take quite a long time. Check if the .mat files are stored in the working directory. If yes, load them. If not, start from scratch.</p><pre class="codeinput"><span class="keyword">if</span> exist(<span class="string">'EURUSD.mat'</span>, <span class="string">'file'</span>) == 2
+    load(<span class="string">'EURUSD.mat'</span>);
+<span class="keyword">else</span>
+    <span class="comment">% load the .csv file into matlab as a table</span>
+    eurusd = readtable(<span class="string">'DAT_MT_EURUSD_M1.csv'</span>);
+    <span class="comment">% Rename each column</span>
+    eurusd.Properties.VariableNames = {<span class="string">'Date'</span>, <span class="string">'Time'</span>, <span class="string">'Open'</span>, <span class="string">'High'</span>, <span class="string">'Low'</span>, <span class="string">'Close'</span>, <span class="string">'Volume'</span>};
+
+    <span class="comment">% First 6 rows of table eurusd</span>
+    eurusd(1:6, :)
+
+    <span class="comment">% Extract time variables for future analysis</span>
+    eurusd.Year = year(datetime(eurusd.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    eurusd.Month = month(datetime(eurusd.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    eurusd.Day = day(datetime(eurusd.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    eurusd.Hour = hour(datetime(eurusd.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>));
+    eurusd.Minute = minute(datetime(eurusd.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>));
+
+    <span class="comment">% Construct a new table</span>
+    eurusd2 = table;
+    <span class="comment">% Extract only 15 min data: only the close price is needed for now.</span>
+    eurusd2 = eurusd(mod(eurusd.Minute, 15) == 0, :);
+    <span class="comment">% Moving average calculation (Period = 20).</span>
+    eurusd2.MA = movmean(eurusd2.Close, [19, 0]);
+    <span class="comment">% Moving standard deviation calculation (Period = 20).</span>
+    eurusd2.STD = movstd(eurusd2.Close, [19, 0]);
+    <span class="comment">% Create a upper and lower band based on the standard deviation.</span>
+    <span class="comment">% This is known as the Bollinger Band,</span>
+    <span class="comment">% a good quantity to study volatility.</span>
+    eurusd2.UP = eurusd2.MA + 2 * eurusd2.STD;
+    eurusd2.LO = eurusd2.MA - 2 * eurusd2.STD;
+    <span class="comment">% The definition of the volatility used in this project.</span>
+    eurusd2.VA = (eurusd2.UP - eurusd2.LO) * 100;
+
+    <span class="comment">% First 6 rows of table eurusd2</span>
+    eurusd2(1:6, :)
+<span class="keyword">end</span>
+
+<span class="comment">% Group this table based on Time, and calculate its average volatility.</span>
+func1 = @(x) mean(x);
+eurusd_grp = varfun(func1, eurusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Time'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+eurusd_grp.Time2 = datetime(eurusd_grp.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>, <span class="string">'Format'</span>, <span class="string">'HH:mm'</span>);
+
+<span class="comment">% First 6 rows of table eurusd_grp</span>
+eurusd_grp(1:6, :)
+
+<span class="comment">% Group based on Year, Month, and Day</span>
+eurusd_grp2 = varfun(func1, eurusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Year'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+<span class="comment">% First 6 rows of table eurusd_grp2</span>
+eurusd_grp2(1:6, :)
+
+eurusd_grp3 = varfun(func1, eurusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Month'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+<span class="comment">% First 6 rows of table eurusd_grp3</span>
+eurusd_grp3(1:6, :)
+
+eurusd_grp4 = varfun(func1, eurusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Day'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+<span class="comment">% First 6 rows of table eurusd_grp4</span>
+eurusd_grp4(1:6, :)
+</pre><pre class="codeoutput">ans = 
+              Time      GroupCount         Fun_VA          Time2
+             _______    __________    _________________    _____
+    00:00    '00:00'    3704           0.35823926188266    00:00
+    00:15    '00:15'    3705          0.353423708479507    00:15
+    00:30    '00:30'    3702          0.348766001675691    00:30
+    00:45    '00:45'    3747          0.339703097400465    00:45
+    01:00    '01:00'    3968          0.329298728019228    01:00
+    01:15    '01:15'    3909          0.323992590742343    01:15
+ans = 
+            Year    GroupCount         Fun_VA      
+            ____    __________    _________________
+    2000    2000     9482         0.547362219452159
+    2001    2001    15450         0.500924340801255
+    2002    2002    14349         0.427990868379152
+    2003    2003    21161         0.499710794387327
+    2004    2004    22000         0.516673982759544
+    2005    2005    21165         0.468883169183415
+ans = 
+         Month    GroupCount         Fun_VA      
+         _____    __________    _________________
+    1    1        33439         0.519572376047473
+    2    2        30088         0.478227366762135
+    3    3        32601         0.486843322995697
+    4    4        31106         0.469354344417856
+    5    5        31846         0.496820439446947
+    6    6        32173          0.50768912412156
+ans = 
+         Day    GroupCount         Fun_VA      
+         ___    __________    _________________
+    1    1      11964         0.475191375934434
+    2    2      12840         0.482981126775172
+    3    3      12851         0.510366981881749
+    4    4      12780         0.484359235782164
+    5    5      13098         0.489313094021417
+    6    6      13029         0.493388488428365
+</pre><p>AUDUSD This is the same process.</p><pre class="codeinput"><span class="keyword">if</span> exist(<span class="string">'AUDUSD.mat'</span>, <span class="string">'file'</span>) == 2
+    load(<span class="string">'AUDUSD.mat'</span>);
+<span class="keyword">else</span>
+    audusd = readtable(<span class="string">'DAT_MT_AUDUSD_M1.csv'</span>);
+    audusd.Properties.VariableNames = {<span class="string">'Date'</span>, <span class="string">'Time'</span>, <span class="string">'Open'</span>, <span class="string">'High'</span>, <span class="string">'Low'</span>, <span class="string">'Close'</span>, <span class="string">'Volume'</span>};
+
+    audusd.Year = year(datetime(audusd.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    audusd.Month = month(datetime(audusd.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    audusd.Day = day(datetime(audusd.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    audusd.Hour = hour(datetime(audusd.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>));
+    audusd.Minute = minute(datetime(audusd.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>));
+
+    audusd2 = table;
+    audusd2 = audusd(mod(audusd.Minute, 15) == 0, :);
+    audusd2.MA = movmean(audusd2.Close, [19, 0]);
+    audusd2.STD = movstd(audusd2.Close, [19, 0]);
+    audusd2.UP = audusd2.MA + 2 * audusd2.STD;
+    audusd2.LO = audusd2.MA - 2 * audusd2.STD;
+    audusd2.VA = (audusd2.UP - audusd2.LO) * 100;
+<span class="keyword">end</span>
+
+func1 = @(x) mean(x);
+audusd_grp = varfun(func1, audusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Time'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+audusd_grp.Time2 = datetime(audusd_grp.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>, <span class="string">'Format'</span>, <span class="string">'HH:mm'</span>);
+
+audusd_grp2 = varfun(func1, audusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Year'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+audusd_grp3 = varfun(func1, audusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Month'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+audusd_grp4 = varfun(func1, audusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Day'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+</pre><p>EURJPY</p><pre class="codeinput"><span class="keyword">if</span> exist(<span class="string">'EURJPY.mat'</span>, <span class="string">'file'</span>) == 2
+    load(<span class="string">'EURJPY.mat'</span>);
+<span class="keyword">else</span>
+    eurjpy = readtable(<span class="string">'DAT_MT_EURJPY_M1.csv'</span>);
+    eurjpy.Properties.VariableNames = {<span class="string">'Date'</span>, <span class="string">'Time'</span>, <span class="string">'Open'</span>, <span class="string">'High'</span>, <span class="string">'Low'</span>, <span class="string">'Close'</span>, <span class="string">'Volume'</span>};
+
+    eurjpy.Year = year(datetime(eurjpy.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    eurjpy.Month = month(datetime(eurjpy.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    eurjpy.Day = day(datetime(eurjpy.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    eurjpy.Hour = hour(datetime(eurjpy.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>));
+    eurjpy.Minute = minute(datetime(eurjpy.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>));
+
+    eurjpy2 = table;
+    eurjpy2 = eurjpy(mod(eurjpy.Minute, 15) == 0, :);
+    eurjpy2.MA = movmean(eurjpy2.Close, [19, 0]);
+    eurjpy2.STD = movstd(eurjpy2.Close, [19, 0]);
+    eurjpy2.UP = eurjpy2.MA + 2 * eurjpy2.STD;
+    eurjpy2.LO = eurjpy2.MA - 2 * eurjpy2.STD;
+    eurjpy2.VA = (eurjpy2.UP - eurjpy2.LO) * 100;
+<span class="keyword">end</span>
+
+func1 = @(x) mean(x);
+eurjpy_grp = varfun(func1, eurjpy2, <span class="string">'GroupingVariables'</span>, <span class="string">'Time'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+eurjpy_grp.Time2 = datetime(eurjpy_grp.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>, <span class="string">'Format'</span>, <span class="string">'HH:mm'</span>);
+
+eurjpy_grp2 = varfun(func1, eurjpy2, <span class="string">'GroupingVariables'</span>, <span class="string">'Year'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+eurjpy_grp3 = varfun(func1, eurjpy2, <span class="string">'GroupingVariables'</span>, <span class="string">'Month'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+eurjpy_grp4 = varfun(func1, eurjpy2, <span class="string">'GroupingVariables'</span>, <span class="string">'Day'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+</pre><p>GBPJPY</p><pre class="codeinput"><span class="keyword">if</span> exist(<span class="string">'GBPJPY.mat'</span>, <span class="string">'file'</span>) == 2
+    load(<span class="string">'GBPJPY.mat'</span>);
+<span class="keyword">else</span>
+    gbpjpy = readtable(<span class="string">'DAT_MT_GBPJPY_M1.csv'</span>);
+    gbpjpy.Properties.VariableNames = {<span class="string">'Date'</span>, <span class="string">'Time'</span>, <span class="string">'Open'</span>, <span class="string">'High'</span>, <span class="string">'Low'</span>, <span class="string">'Close'</span>, <span class="string">'Volume'</span>};
+
+    gbpjpy.Year = year(datetime(gbpjpy.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    gbpjpy.Month = month(datetime(gbpjpy.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    gbpjpy.Day = day(datetime(gbpjpy.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    gbpjpy.Hour = hour(datetime(gbpjpy.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>));
+    gbpjpy.Minute = minute(datetime(gbpjpy.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>));
+
+    gbpjpy2 = table;
+    gbpjpy2 = gbpjpy(mod(gbpjpy.Minute, 15) == 0, :);
+    gbpjpy2.MA = movmean(gbpjpy2.Close, [19, 0]);
+    gbpjpy2.STD = movstd(gbpjpy2.Close, [19, 0]);
+    gbpjpy2.UP = gbpjpy2.MA + 2 * gbpjpy2.STD;
+    gbpjpy2.LO = gbpjpy2.MA - 2 * gbpjpy2.STD;
+    gbpjpy2.VA = (gbpjpy2.UP - gbpjpy2.LO) * 100;
+<span class="keyword">end</span>
+
+func1 = @(x) mean(x);
+gbpjpy_grp = varfun(func1, gbpjpy2, <span class="string">'GroupingVariables'</span>, <span class="string">'Time'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+gbpjpy_grp.Time2 = datetime(gbpjpy_grp.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>, <span class="string">'Format'</span>, <span class="string">'HH:mm'</span>);
+
+gbpjpy_grp2 = varfun(func1, gbpjpy2, <span class="string">'GroupingVariables'</span>, <span class="string">'Year'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+gbpjpy_grp3 = varfun(func1, gbpjpy2, <span class="string">'GroupingVariables'</span>, <span class="string">'Month'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+gbpjpy_grp4 = varfun(func1, gbpjpy2, <span class="string">'GroupingVariables'</span>, <span class="string">'Day'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+</pre><p>GBPUSD</p><pre class="codeinput"><span class="keyword">if</span> exist(<span class="string">'GBPUSD.mat'</span>, <span class="string">'file'</span>) == 2
+    load(<span class="string">'GBPUSD.mat'</span>);
+<span class="keyword">else</span>
+    gbpusd = readtable(<span class="string">'DAT_MT_GBPUSD_M1.csv'</span>);
+    gbpusd.Properties.VariableNames = {<span class="string">'Date'</span>, <span class="string">'Time'</span>, <span class="string">'Open'</span>, <span class="string">'High'</span>, <span class="string">'Low'</span>, <span class="string">'Close'</span>, <span class="string">'Volume'</span>};
+
+    gbpusd.Year = year(datetime(gbpusd.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    gbpusd.Month = month(datetime(gbpusd.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    gbpusd.Day = day(datetime(gbpusd.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    gbpusd.Hour = hour(datetime(gbpusd.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>));
+    gbpusd.Minute = minute(datetime(gbpusd.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>));
+
+    gbpusd2 = table;
+    gbpusd2 = gbpusd(mod(gbpusd.Minute, 15) == 0, :);
+    gbpusd2.MA = movmean(gbpusd2.Close, [19, 0]);
+    gbpusd2.STD = movstd(gbpusd2.Close, [19, 0]);
+    gbpusd2.UP = gbpusd2.MA + 2 * gbpusd2.STD;
+    gbpusd2.LO = gbpusd2.MA - 2 * gbpusd2.STD;
+    gbpusd2.VA = (gbpusd2.UP - gbpusd2.LO) * 100;
+<span class="keyword">end</span>
+
+func1 = @(x) mean(x);
+gbpusd_grp = varfun(func1, gbpusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Time'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+gbpusd_grp.Time2 = datetime(gbpusd_grp.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>, <span class="string">'Format'</span>, <span class="string">'HH:mm'</span>);
+
+gbpusd_grp2 = varfun(func1, gbpusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Year'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+gbpusd_grp3 = varfun(func1, gbpusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Month'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+gbpusd_grp4 = varfun(func1, gbpusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Day'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+</pre><p>USDJPY</p><pre class="codeinput"><span class="keyword">if</span> exist(<span class="string">'USDJPY.mat'</span>, <span class="string">'file'</span>) == 2
+    load(<span class="string">'USDJPY.mat'</span>);
+<span class="keyword">else</span>
+    usdjpy = readtable(<span class="string">'DAT_MT_USDJPY_M1.csv'</span>);
+    usdjpy.Properties.VariableNames = {<span class="string">'Date'</span>, <span class="string">'Time'</span>, <span class="string">'Open'</span>, <span class="string">'High'</span>, <span class="string">'Low'</span>, <span class="string">'Close'</span>, <span class="string">'Volume'</span>};
+
+    usdjpy.Year = year(datetime(usdjpy.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    usdjpy.Month = month(datetime(usdjpy.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    usdjpy.Day = day(datetime(usdjpy.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    usdjpy.Hour = hour(datetime(usdjpy.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>));
+    usdjpy.Minute = minute(datetime(usdjpy.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>));
+
+    usdjpy2 = table;
+    usdjpy2 = usdjpy(mod(usdjpy.Minute, 15) == 0, :);
+    usdjpy2.MA = movmean(usdjpy2.Close, [19, 0]);
+    usdjpy2.STD = movstd(usdjpy2.Close, [19, 0]);
+    usdjpy2.UP = usdjpy2.MA + 2 * usdjpy2.STD;
+    usdjpy2.LO = usdjpy2.MA - 2 * usdjpy2.STD;
+    usdjpy2.VA = (usdjpy2.UP - usdjpy2.LO) * 100;
+<span class="keyword">end</span>
+
+func1 = @(x) mean(x);
+usdjpy_grp = varfun(func1, usdjpy2, <span class="string">'GroupingVariables'</span>, <span class="string">'Time'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+usdjpy_grp.Time2 = datetime(usdjpy_grp.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>, <span class="string">'Format'</span>, <span class="string">'HH:mm'</span>);
+
+usdjpy_grp2 = varfun(func1, usdjpy2, <span class="string">'GroupingVariables'</span>, <span class="string">'Year'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+usdjpy_grp3 = varfun(func1, usdjpy2, <span class="string">'GroupingVariables'</span>, <span class="string">'Month'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+usdjpy_grp4 = varfun(func1, usdjpy2, <span class="string">'GroupingVariables'</span>, <span class="string">'Day'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+</pre><p>XAUUSD</p><pre class="codeinput"><span class="keyword">if</span> exist(<span class="string">'XAUUSD.mat'</span>, <span class="string">'file'</span>) == 2
+    load(<span class="string">'XAUUSD.mat'</span>);
+<span class="keyword">else</span>
+    xauusd = readtable(<span class="string">'DAT_MT_XAUUSD_M1.csv'</span>);
+    xauusd.Properties.VariableNames = {<span class="string">'Date'</span>, <span class="string">'Time'</span>, <span class="string">'Open'</span>, <span class="string">'High'</span>, <span class="string">'Low'</span>, <span class="string">'Close'</span>, <span class="string">'Volume'</span>};
+
+    xauusd.Year = year(datetime(xauusd.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    xauusd.Month = month(datetime(xauusd.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    xauusd.Day = day(datetime(xauusd.Date, <span class="string">'InputFormat'</span>, <span class="string">'yyyy.MM.dd'</span>));
+    xauusd.Hour = hour(datetime(xauusd.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>));
+    xauusd.Minute = minute(datetime(xauusd.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>));
+
+    xauusd2 = table;
+    xauusd2 = xauusd(mod(xauusd.Minute, 15) == 0, :);
+    xauusd2.MA = movmean(xauusd2.Close, [19, 0]);
+    xauusd2.STD = movstd(xauusd2.Close, [19, 0]);
+    xauusd2.UP = xauusd2.MA + 2 * xauusd2.STD;
+    xauusd2.LO = xauusd2.MA - 2 * xauusd2.STD;
+    xauusd2.VA = (xauusd2.UP - xauusd2.LO) * 100;
+<span class="keyword">end</span>
+
+func1 = @(x) mean(x);
+xauusd_grp = varfun(func1, xauusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Time'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+xauusd_grp.Time2 = datetime(xauusd_grp.Time, <span class="string">'InputFormat'</span>, <span class="string">'HH:mm'</span>, <span class="string">'Format'</span>, <span class="string">'HH:mm'</span>);
+
+xauusd_grp2 = varfun(func1, xauusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Year'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+xauusd_grp3 = varfun(func1, xauusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Month'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+xauusd_grp4 = varfun(func1, xauusd2, <span class="string">'GroupingVariables'</span>, <span class="string">'Day'</span>, <span class="string">'InputVariables'</span>, <span class="string">'VA'</span>);
+</pre><h2>Part2 - Basic plotting<a name="9"></a></h2><p>Notes: (1) For comparison, the maximum value of each curve has been set equal to 1. (2) The time in the x-aixs is the Eastern Standard Time (UTC-5).</p><pre class="codeinput"><span class="comment">% Plot-1: Volatility vs. Time (every 15 mins)</span>
+figure
+hold <span class="string">on</span>;
+plot(eurusd_grp.Time2, eurusd_grp.Fun_VA/max(eurusd_grp.Fun_VA))
+plot(audusd_grp.Time2, audusd_grp.Fun_VA/max(audusd_grp.Fun_VA))
+plot(eurjpy_grp.Time2, eurjpy_grp.Fun_VA/max(eurjpy_grp.Fun_VA))
+plot(gbpjpy_grp.Time2, gbpjpy_grp.Fun_VA/max(gbpjpy_grp.Fun_VA))
+plot(gbpusd_grp.Time2, gbpusd_grp.Fun_VA/max(gbpusd_grp.Fun_VA))
+plot(usdjpy_grp.Time2, usdjpy_grp.Fun_VA/max(usdjpy_grp.Fun_VA))
+plot(xauusd_grp.Time2, xauusd_grp.Fun_VA/max(xauusd_grp.Fun_VA))
+
+datetick(<span class="string">'x'</span>, <span class="string">'HH:mm'</span>)
+title(<span class="string">'Volatility vs. Time (every 15 mins)'</span>);
+xlabel(<span class="string">'Time'</span>);
+ylabel(<span class="string">'Volatility'</span>);
+set(gca, <span class="string">'YScale'</span>, <span class="string">'log'</span>);
+legend(<span class="string">'EURUSD'</span>, <span class="string">'AUDUSD'</span>, <span class="string">'EURJPY'</span>, <span class="string">'GBPJPY'</span>, <span class="string">'GBPUSD'</span>, <span class="string">'USDJPY'</span>, <span class="string">'XAUUSD'</span>);
+<span class="comment">%line([datetime('00:15', 'InputFormat', 'HH:mm'), datetime('23:45', 'InputFormat', 'HH:mm')], [0.5, 0.5], 'LineStyle', '--');</span>
+hold <span class="string">off</span>;
+
+<span class="comment">% Some quick observations from this figure:</span>
+<span class="comment">% (1) From this figure, there exists three peaks: one minor peak for the Asian</span>
+<span class="comment">% session, the other two correspond to the European session and the US</span>
+<span class="comment">% session.</span>
+<span class="comment">% (2) Currency pairs related to AUD and JPY are more volatile than others</span>
+<span class="comment">% in Asian session. and currency pair related to GBP are more volatile in</span>
+<span class="comment">% the European session, which is a reasonable fact.</span>
+<span class="comment">% (3) All currency pairs appears to have the same peak volatilities, at</span>
+<span class="comment">% around 12:30 pm.</span>
+<span class="comment">% (4) Surprisingly, gold (XAU) has the lowest volatility in the Asian and</span>
+<span class="comment">% the European sessions, compared to other currency pairs.</span>
+<span class="comment">% (5) The best time for traders to activate their trading strategies would</span>
+<span class="comment">% be 2:15 am EST.</span>
+</pre><img vspace="5" hspace="5" src="./readmeExtras/README_01.png" alt=""> <pre class="codeinput"><span class="comment">% Plot-2: Volatility vs. Year</span>
+figure
+hold <span class="string">on</span>;
+plot(eurusd_grp2.Year, eurusd_grp2.Fun_VA/max(eurusd_grp2.Fun_VA))
+plot(audusd_grp2.Year, audusd_grp2.Fun_VA/max(audusd_grp2.Fun_VA))
+plot(eurjpy_grp2.Year, eurjpy_grp2.Fun_VA/max(eurjpy_grp2.Fun_VA))
+plot(gbpjpy_grp2.Year, gbpjpy_grp2.Fun_VA/max(gbpjpy_grp2.Fun_VA))
+plot(gbpusd_grp2.Year, gbpusd_grp2.Fun_VA/max(gbpusd_grp2.Fun_VA))
+plot(usdjpy_grp2.Year, usdjpy_grp2.Fun_VA/max(usdjpy_grp2.Fun_VA))
+plot(xauusd_grp2.Year, xauusd_grp2.Fun_VA/max(xauusd_grp2.Fun_VA))
+set(gca, <span class="string">'YScale'</span>, <span class="string">'log'</span>);
+legend(<span class="string">'EURUSD'</span>, <span class="string">'AUDUSD'</span>, <span class="string">'EURJPY'</span>, <span class="string">'GBPJPY'</span>, <span class="string">'GBPUSD'</span>, <span class="string">'USDJPY'</span>, <span class="string">'XAUUSD'</span>);
+<span class="comment">%line([datetime('00:15', 'InputFormat', 'HH:mm'), datetime('23:45', 'InputFormat', 'HH:mm')], [0.5, 0.5], 'LineStyle', '--');</span>
+title(<span class="string">'Volatility vs. Year'</span>);
+xlabel(<span class="string">'Year'</span>);
+ylabel(<span class="string">'Volatility'</span>);
+hold <span class="string">off</span>;
+
+<span class="comment">% What do we see in this figure:</span>
+<span class="comment">% (1) No doubt year 2008 was the most volitile year.</span>
+<span class="comment">% (2) Since then, the volatility drops significantly, especially for years</span>
+<span class="comment">% 2012, 2014, and 2017.</span>
+<span class="comment">% (3) Gold seems to have a lagging volatility compared to others, which</span>
+<span class="comment">% show a peak at 2011.</span>
+</pre><img vspace="5" hspace="5" src="./readmeExtras/README_02.png" alt=""> <p>Plot-3: Volatility vs. Month</p><pre class="codeinput">figure
+hold <span class="string">on</span>;
+plot(eurusd_grp3.Month, eurusd_grp3.Fun_VA/max(eurusd_grp3.Fun_VA))
+plot(audusd_grp3.Month, audusd_grp3.Fun_VA/max(audusd_grp3.Fun_VA))
+plot(eurjpy_grp3.Month, eurjpy_grp3.Fun_VA/max(eurjpy_grp3.Fun_VA))
+plot(gbpjpy_grp3.Month, gbpjpy_grp3.Fun_VA/max(gbpjpy_grp3.Fun_VA))
+plot(gbpusd_grp3.Month, gbpusd_grp3.Fun_VA/max(gbpusd_grp3.Fun_VA))
+plot(usdjpy_grp3.Month, usdjpy_grp3.Fun_VA/max(usdjpy_grp3.Fun_VA))
+plot(xauusd_grp3.Month, xauusd_grp3.Fun_VA/max(xauusd_grp3.Fun_VA))
+set(gca, <span class="string">'YScale'</span>, <span class="string">'log'</span>);
+title(<span class="string">'Volatility vs. Month'</span>);
+xlabel(<span class="string">'Month'</span>);
+ylabel(<span class="string">'Volatility'</span>);
+legend(<span class="string">'EURUSD'</span>, <span class="string">'AUDUSD'</span>, <span class="string">'EURJPY'</span>, <span class="string">'GBPJPY'</span>, <span class="string">'GBPUSD'</span>, <span class="string">'USDJPY'</span>, <span class="string">'XAUUSD'</span>);
+<span class="comment">%line([datetime('00:15', 'InputFormat', 'HH:mm'), datetime('23:45', 'InputFormat', 'HH:mm')], [0.5, 0.5], 'LineStyle', '--');</span>
+hold <span class="string">off</span>;
+
+<span class="comment">% What do we see in this figure:</span>
+<span class="comment">% (1) Generally speaking, July and December are the months with the lowest</span>
+<span class="comment">% volatility, and January, June, and October seem to have the highest.</span>
+</pre><img vspace="5" hspace="5" src="./readmeExtras/README_03.png" alt=""> <p>Plot-4: Volatility vs. Day within a month</p><pre class="codeinput">figure
+hold <span class="string">on</span>;
+plot(eurusd_grp4.Day, eurusd_grp4.Fun_VA/max(eurusd_grp4.Fun_VA))
+plot(audusd_grp4.Day, audusd_grp4.Fun_VA/max(audusd_grp4.Fun_VA))
+plot(eurjpy_grp4.Day, eurjpy_grp4.Fun_VA/max(eurjpy_grp4.Fun_VA))
+plot(gbpjpy_grp4.Day, gbpjpy_grp4.Fun_VA/max(gbpjpy_grp4.Fun_VA))
+plot(gbpusd_grp4.Day, gbpusd_grp4.Fun_VA/max(gbpusd_grp4.Fun_VA))
+plot(usdjpy_grp4.Day, usdjpy_grp4.Fun_VA/max(usdjpy_grp4.Fun_VA))
+plot(xauusd_grp4.Day, xauusd_grp4.Fun_VA/max(xauusd_grp4.Fun_VA))
+set(gca, <span class="string">'YScale'</span>, <span class="string">'log'</span>);
+title(<span class="string">'Volatility vs. Day'</span>);
+xlabel(<span class="string">'Day'</span>);
+ylabel(<span class="string">'Volatility'</span>);
+legend(<span class="string">'EURUSD'</span>, <span class="string">'AUDUSD'</span>, <span class="string">'EURJPY'</span>, <span class="string">'GBPJPY'</span>, <span class="string">'GBPUSD'</span>, <span class="string">'USDJPY'</span>, <span class="string">'XAUUSD'</span>);
+<span class="comment">%line([datetime('00:15', 'InputFormat', 'HH:mm'), datetime('23:45', 'InputFormat', 'HH:mm')], [0.5, 0.5], 'LineStyle', '--');</span>
+hold <span class="string">off</span>;
+
+<span class="comment">% What do we see in this figure:</span>
+<span class="comment">% (1) The first half of the month is often more volatile than the second</span>
+<span class="comment">% half.</span>
+</pre><img vspace="5" hspace="5" src="./readmeExtras/README_04.png" alt=""> <h2>Part3 - Find a suitable time to start the analysis<a name="13"></a></h2><p>(Needs further work)</p><h2>Part4 - Pattern recognition within the study time range 1<a name="14"></a></h2><p>Using price movement (Needs further work)</p><h2>Part5 - Pattern recognition within the study time range 2<a name="15"></a></h2><p>Using MACD and other technical indicators (Needs further work)</p><h2>Part6 - Apply this result to the stock market<a name="16"></a></h2><p>(Needs further work)</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2014b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Project name: Research on the FX market based on its volatility
+% Author: Peter Hsin-Yen Lee
+% Date: 2018/4/29
+
+%% Introduction
+% Forex (FX) market is the largest market in the world, and it is traded 24
+% hours except for weekends. The number of traders involved, and the
+% actions taken by every central bank and commercial bank, make it notorious
+% for its volatility. Most day traders, swing traders, and scalpers gain
+% their profit when the market starts to move, or to have a obvious
+% direction, instead of bouncing back and forth. So an important
+% information for markets without trading hours and without trading volumes
+% would be when most traders start trading, and this can be measured by 
+% the volatility.
+% There are some statistical indicators, for example, the Bollinger band,
+% measuring the volatility of the market, and most of the strategies focus
+% on confirming the breakouts and determine the entry point. It is acted as
+% a supporting indicator, and is suggested that we combine this with other
+% major indicators to build a trading system. However, the volatility in
+% the FX market does provide us some interesting facts on different time
+% frames.
+% The project starts from the analysis of volatility, looks for some
+% statistical facts based on different currency pairs in different time
+% frames, and further finds patterns within each time. The following code
+% analyze six currency pairs (EURUSD, AUDUSD, EURJPY, GBPJPY, GBPUSD,
+% USDJPY) and XAUUSD, which is the price of gold. All these data, except
+% for AUDUSD, contain the 1-min price starting from 2000/1/1. Data of every
+% 15 mins is extracted, and calculations of moving average and moving
+% standard deviation are made. Some plots are drawn with some notes taken.
+% For further work, a pattern recognition at certain volatility values to
+% find similarities in particular currency pairs. This can further be 
+% applied to the stock market, but the time frame needs to be adjusted, and
+% this is also considered as a future project.
+% 
+
+%% Part1 - Historical data processing
+% EURUSD
+% Loading files and processing them take quite a long time.
+% Check if the .mat files are stored in the working directory.
+% If yes, load them. If not, start from scratch.
+
+if exist('EURUSD.mat', 'file') == 2
+    load('EURUSD.mat');
+else
+    % load the .csv file into matlab as a table
+    eurusd = readtable('DAT_MT_EURUSD_M1.csv');
+    % Rename each column
+    eurusd.Properties.VariableNames = {'Date', 'Time', 'Open', 'High', 'Low', 'Close', 'Volume'};
+    
+    % First 6 rows of table eurusd
+    eurusd(1:6, :)
+
+    % Extract time variables for future analysis
+    eurusd.Year = year(datetime(eurusd.Date, 'InputFormat', 'yyyy.MM.dd'));
+    eurusd.Month = month(datetime(eurusd.Date, 'InputFormat', 'yyyy.MM.dd'));
+    eurusd.Day = day(datetime(eurusd.Date, 'InputFormat', 'yyyy.MM.dd'));
+    eurusd.Hour = hour(datetime(eurusd.Time, 'InputFormat', 'HH:mm'));
+    eurusd.Minute = minute(datetime(eurusd.Time, 'InputFormat', 'HH:mm'));
+    
+    % Construct a new table
+    eurusd2 = table;
+    % Extract only 15 min data: only the close price is needed for now.
+    eurusd2 = eurusd(mod(eurusd.Minute, 15) == 0, :);
+    % Moving average calculation (Period = 20).
+    eurusd2.MA = movmean(eurusd2.Close, [19, 0]);
+    % Moving standard deviation calculation (Period = 20).
+    eurusd2.STD = movstd(eurusd2.Close, [19, 0]);
+    % Create a upper and lower band based on the standard deviation.
+    % This is known as the Bollinger Band,
+    % a good quantity to study volatility.
+    eurusd2.UP = eurusd2.MA + 2 * eurusd2.STD;
+    eurusd2.LO = eurusd2.MA - 2 * eurusd2.STD;
+    % The definition of the volatility used in this project.
+    eurusd2.VA = (eurusd2.UP - eurusd2.LO) * 100;
+    
+    % First 6 rows of table eurusd2
+    eurusd2(1:6, :)
+end
+
+% Group this table based on Time, and calculate its average volatility.
+func1 = @(x) mean(x);
+eurusd_grp = varfun(func1, eurusd2, 'GroupingVariables', 'Time', 'InputVariables', 'VA');
+eurusd_grp.Time2 = datetime(eurusd_grp.Time, 'InputFormat', 'HH:mm', 'Format', 'HH:mm');
+
+% First 6 rows of table eurusd_grp
+eurusd_grp(1:6, :)
+
+% Group based on Year, Month, and Day
+eurusd_grp2 = varfun(func1, eurusd2, 'GroupingVariables', 'Year', 'InputVariables', 'VA');
+% First 6 rows of table eurusd_grp2
+eurusd_grp2(1:6, :)
+
+eurusd_grp3 = varfun(func1, eurusd2, 'GroupingVariables', 'Month', 'InputVariables', 'VA');
+% First 6 rows of table eurusd_grp3
+eurusd_grp3(1:6, :)
+
+eurusd_grp4 = varfun(func1, eurusd2, 'GroupingVariables', 'Day', 'InputVariables', 'VA');
+% First 6 rows of table eurusd_grp4
+eurusd_grp4(1:6, :)
+
+%%
+% AUDUSD
+% This is the same process.
+if exist('AUDUSD.mat', 'file') == 2
+    load('AUDUSD.mat');
+else
+    audusd = readtable('DAT_MT_AUDUSD_M1.csv');
+    audusd.Properties.VariableNames = {'Date', 'Time', 'Open', 'High', 'Low', 'Close', 'Volume'};
+    
+    audusd.Year = year(datetime(audusd.Date, 'InputFormat', 'yyyy.MM.dd'));
+    audusd.Month = month(datetime(audusd.Date, 'InputFormat', 'yyyy.MM.dd'));
+    audusd.Day = day(datetime(audusd.Date, 'InputFormat', 'yyyy.MM.dd'));
+    audusd.Hour = hour(datetime(audusd.Time, 'InputFormat', 'HH:mm'));
+    audusd.Minute = minute(datetime(audusd.Time, 'InputFormat', 'HH:mm'));
+
+    audusd2 = table;
+    audusd2 = audusd(mod(audusd.Minute, 15) == 0, :);
+    audusd2.MA = movmean(audusd2.Close, [19, 0]);
+    audusd2.STD = movstd(audusd2.Close, [19, 0]);
+    audusd2.UP = audusd2.MA + 2 * audusd2.STD;
+    audusd2.LO = audusd2.MA - 2 * audusd2.STD;
+    audusd2.VA = (audusd2.UP - audusd2.LO) * 100;
+end
+
+func1 = @(x) mean(x);
+audusd_grp = varfun(func1, audusd2, 'GroupingVariables', 'Time', 'InputVariables', 'VA');
+audusd_grp.Time2 = datetime(audusd_grp.Time, 'InputFormat', 'HH:mm', 'Format', 'HH:mm');
+
+audusd_grp2 = varfun(func1, audusd2, 'GroupingVariables', 'Year', 'InputVariables', 'VA');
+audusd_grp3 = varfun(func1, audusd2, 'GroupingVariables', 'Month', 'InputVariables', 'VA');
+audusd_grp4 = varfun(func1, audusd2, 'GroupingVariables', 'Day', 'InputVariables', 'VA');
+
+%%
+% EURJPY
+if exist('EURJPY.mat', 'file') == 2
+    load('EURJPY.mat');
+else
+    eurjpy = readtable('DAT_MT_EURJPY_M1.csv');
+    eurjpy.Properties.VariableNames = {'Date', 'Time', 'Open', 'High', 'Low', 'Close', 'Volume'};
+    
+    eurjpy.Year = year(datetime(eurjpy.Date, 'InputFormat', 'yyyy.MM.dd'));
+    eurjpy.Month = month(datetime(eurjpy.Date, 'InputFormat', 'yyyy.MM.dd'));
+    eurjpy.Day = day(datetime(eurjpy.Date, 'InputFormat', 'yyyy.MM.dd'));
+    eurjpy.Hour = hour(datetime(eurjpy.Time, 'InputFormat', 'HH:mm'));
+    eurjpy.Minute = minute(datetime(eurjpy.Time, 'InputFormat', 'HH:mm'));
+
+    eurjpy2 = table;
+    eurjpy2 = eurjpy(mod(eurjpy.Minute, 15) == 0, :);
+    eurjpy2.MA = movmean(eurjpy2.Close, [19, 0]);
+    eurjpy2.STD = movstd(eurjpy2.Close, [19, 0]);
+    eurjpy2.UP = eurjpy2.MA + 2 * eurjpy2.STD;
+    eurjpy2.LO = eurjpy2.MA - 2 * eurjpy2.STD;
+    eurjpy2.VA = (eurjpy2.UP - eurjpy2.LO) * 100;
+end
+
+func1 = @(x) mean(x);
+eurjpy_grp = varfun(func1, eurjpy2, 'GroupingVariables', 'Time', 'InputVariables', 'VA');
+eurjpy_grp.Time2 = datetime(eurjpy_grp.Time, 'InputFormat', 'HH:mm', 'Format', 'HH:mm');
+
+eurjpy_grp2 = varfun(func1, eurjpy2, 'GroupingVariables', 'Year', 'InputVariables', 'VA');
+eurjpy_grp3 = varfun(func1, eurjpy2, 'GroupingVariables', 'Month', 'InputVariables', 'VA');
+eurjpy_grp4 = varfun(func1, eurjpy2, 'GroupingVariables', 'Day', 'InputVariables', 'VA');
+
+%%
+% GBPJPY
+if exist('GBPJPY.mat', 'file') == 2
+    load('GBPJPY.mat');
+else
+    gbpjpy = readtable('DAT_MT_GBPJPY_M1.csv');
+    gbpjpy.Properties.VariableNames = {'Date', 'Time', 'Open', 'High', 'Low', 'Close', 'Volume'};
+    
+    gbpjpy.Year = year(datetime(gbpjpy.Date, 'InputFormat', 'yyyy.MM.dd'));
+    gbpjpy.Month = month(datetime(gbpjpy.Date, 'InputFormat', 'yyyy.MM.dd'));
+    gbpjpy.Day = day(datetime(gbpjpy.Date, 'InputFormat', 'yyyy.MM.dd'));
+    gbpjpy.Hour = hour(datetime(gbpjpy.Time, 'InputFormat', 'HH:mm'));
+    gbpjpy.Minute = minute(datetime(gbpjpy.Time, 'InputFormat', 'HH:mm'));
+
+    gbpjpy2 = table;
+    gbpjpy2 = gbpjpy(mod(gbpjpy.Minute, 15) == 0, :);
+    gbpjpy2.MA = movmean(gbpjpy2.Close, [19, 0]);
+    gbpjpy2.STD = movstd(gbpjpy2.Close, [19, 0]);
+    gbpjpy2.UP = gbpjpy2.MA + 2 * gbpjpy2.STD;
+    gbpjpy2.LO = gbpjpy2.MA - 2 * gbpjpy2.STD;
+    gbpjpy2.VA = (gbpjpy2.UP - gbpjpy2.LO) * 100;
+end
+
+func1 = @(x) mean(x);
+gbpjpy_grp = varfun(func1, gbpjpy2, 'GroupingVariables', 'Time', 'InputVariables', 'VA');
+gbpjpy_grp.Time2 = datetime(gbpjpy_grp.Time, 'InputFormat', 'HH:mm', 'Format', 'HH:mm');
+
+gbpjpy_grp2 = varfun(func1, gbpjpy2, 'GroupingVariables', 'Year', 'InputVariables', 'VA');
+gbpjpy_grp3 = varfun(func1, gbpjpy2, 'GroupingVariables', 'Month', 'InputVariables', 'VA');
+gbpjpy_grp4 = varfun(func1, gbpjpy2, 'GroupingVariables', 'Day', 'InputVariables', 'VA');
+
+%%
+% GBPUSD
+if exist('GBPUSD.mat', 'file') == 2
+    load('GBPUSD.mat');
+else
+    gbpusd = readtable('DAT_MT_GBPUSD_M1.csv');
+    gbpusd.Properties.VariableNames = {'Date', 'Time', 'Open', 'High', 'Low', 'Close', 'Volume'};
+    
+    gbpusd.Year = year(datetime(gbpusd.Date, 'InputFormat', 'yyyy.MM.dd'));
+    gbpusd.Month = month(datetime(gbpusd.Date, 'InputFormat', 'yyyy.MM.dd'));
+    gbpusd.Day = day(datetime(gbpusd.Date, 'InputFormat', 'yyyy.MM.dd'));
+    gbpusd.Hour = hour(datetime(gbpusd.Time, 'InputFormat', 'HH:mm'));
+    gbpusd.Minute = minute(datetime(gbpusd.Time, 'InputFormat', 'HH:mm'));
+
+    gbpusd2 = table;
+    gbpusd2 = gbpusd(mod(gbpusd.Minute, 15) == 0, :);
+    gbpusd2.MA = movmean(gbpusd2.Close, [19, 0]);
+    gbpusd2.STD = movstd(gbpusd2.Close, [19, 0]);
+    gbpusd2.UP = gbpusd2.MA + 2 * gbpusd2.STD;
+    gbpusd2.LO = gbpusd2.MA - 2 * gbpusd2.STD;
+    gbpusd2.VA = (gbpusd2.UP - gbpusd2.LO) * 100;
+end
+
+func1 = @(x) mean(x);
+gbpusd_grp = varfun(func1, gbpusd2, 'GroupingVariables', 'Time', 'InputVariables', 'VA');
+gbpusd_grp.Time2 = datetime(gbpusd_grp.Time, 'InputFormat', 'HH:mm', 'Format', 'HH:mm');
+
+gbpusd_grp2 = varfun(func1, gbpusd2, 'GroupingVariables', 'Year', 'InputVariables', 'VA');
+gbpusd_grp3 = varfun(func1, gbpusd2, 'GroupingVariables', 'Month', 'InputVariables', 'VA');
+gbpusd_grp4 = varfun(func1, gbpusd2, 'GroupingVariables', 'Day', 'InputVariables', 'VA');
+
+%%
+% USDJPY
+if exist('USDJPY.mat', 'file') == 2
+    load('USDJPY.mat');
+else
+    usdjpy = readtable('DAT_MT_USDJPY_M1.csv');
+    usdjpy.Properties.VariableNames = {'Date', 'Time', 'Open', 'High', 'Low', 'Close', 'Volume'};
+    
+    usdjpy.Year = year(datetime(usdjpy.Date, 'InputFormat', 'yyyy.MM.dd'));
+    usdjpy.Month = month(datetime(usdjpy.Date, 'InputFormat', 'yyyy.MM.dd'));
+    usdjpy.Day = day(datetime(usdjpy.Date, 'InputFormat', 'yyyy.MM.dd'));
+    usdjpy.Hour = hour(datetime(usdjpy.Time, 'InputFormat', 'HH:mm'));
+    usdjpy.Minute = minute(datetime(usdjpy.Time, 'InputFormat', 'HH:mm'));
+
+    usdjpy2 = table;
+    usdjpy2 = usdjpy(mod(usdjpy.Minute, 15) == 0, :);
+    usdjpy2.MA = movmean(usdjpy2.Close, [19, 0]);
+    usdjpy2.STD = movstd(usdjpy2.Close, [19, 0]);
+    usdjpy2.UP = usdjpy2.MA + 2 * usdjpy2.STD;
+    usdjpy2.LO = usdjpy2.MA - 2 * usdjpy2.STD;
+    usdjpy2.VA = (usdjpy2.UP - usdjpy2.LO) * 100;
+end
+
+func1 = @(x) mean(x);
+usdjpy_grp = varfun(func1, usdjpy2, 'GroupingVariables', 'Time', 'InputVariables', 'VA');
+usdjpy_grp.Time2 = datetime(usdjpy_grp.Time, 'InputFormat', 'HH:mm', 'Format', 'HH:mm');
+
+usdjpy_grp2 = varfun(func1, usdjpy2, 'GroupingVariables', 'Year', 'InputVariables', 'VA');
+usdjpy_grp3 = varfun(func1, usdjpy2, 'GroupingVariables', 'Month', 'InputVariables', 'VA');
+usdjpy_grp4 = varfun(func1, usdjpy2, 'GroupingVariables', 'Day', 'InputVariables', 'VA');
+
+%%
+% XAUUSD
+if exist('XAUUSD.mat', 'file') == 2
+    load('XAUUSD.mat');
+else
+    xauusd = readtable('DAT_MT_XAUUSD_M1.csv');
+    xauusd.Properties.VariableNames = {'Date', 'Time', 'Open', 'High', 'Low', 'Close', 'Volume'};
+    
+    xauusd.Year = year(datetime(xauusd.Date, 'InputFormat', 'yyyy.MM.dd'));
+    xauusd.Month = month(datetime(xauusd.Date, 'InputFormat', 'yyyy.MM.dd'));
+    xauusd.Day = day(datetime(xauusd.Date, 'InputFormat', 'yyyy.MM.dd'));
+    xauusd.Hour = hour(datetime(xauusd.Time, 'InputFormat', 'HH:mm'));
+    xauusd.Minute = minute(datetime(xauusd.Time, 'InputFormat', 'HH:mm'));
+
+    xauusd2 = table;
+    xauusd2 = xauusd(mod(xauusd.Minute, 15) == 0, :);
+    xauusd2.MA = movmean(xauusd2.Close, [19, 0]);
+    xauusd2.STD = movstd(xauusd2.Close, [19, 0]);
+    xauusd2.UP = xauusd2.MA + 2 * xauusd2.STD;
+    xauusd2.LO = xauusd2.MA - 2 * xauusd2.STD;
+    xauusd2.VA = (xauusd2.UP - xauusd2.LO) * 100;
+end
+
+func1 = @(x) mean(x);
+xauusd_grp = varfun(func1, xauusd2, 'GroupingVariables', 'Time', 'InputVariables', 'VA');
+xauusd_grp.Time2 = datetime(xauusd_grp.Time, 'InputFormat', 'HH:mm', 'Format', 'HH:mm');
+
+xauusd_grp2 = varfun(func1, xauusd2, 'GroupingVariables', 'Year', 'InputVariables', 'VA');
+xauusd_grp3 = varfun(func1, xauusd2, 'GroupingVariables', 'Month', 'InputVariables', 'VA');
+xauusd_grp4 = varfun(func1, xauusd2, 'GroupingVariables', 'Day', 'InputVariables', 'VA');
+
+
+%% Part2 - Basic plotting
+% Notes:
+% (1) For comparison, the maximum value of each curve has been set equal to 1.
+% (2) The time in the x-aixs is the Eastern Standard Time (UTC-5).
+
+% Plot-1: Volatility vs. Time (every 15 mins)
+figure
+hold on;
+plot(eurusd_grp.Time2, eurusd_grp.Fun_VA/max(eurusd_grp.Fun_VA))
+plot(audusd_grp.Time2, audusd_grp.Fun_VA/max(audusd_grp.Fun_VA))
+plot(eurjpy_grp.Time2, eurjpy_grp.Fun_VA/max(eurjpy_grp.Fun_VA))
+plot(gbpjpy_grp.Time2, gbpjpy_grp.Fun_VA/max(gbpjpy_grp.Fun_VA))
+plot(gbpusd_grp.Time2, gbpusd_grp.Fun_VA/max(gbpusd_grp.Fun_VA))
+plot(usdjpy_grp.Time2, usdjpy_grp.Fun_VA/max(usdjpy_grp.Fun_VA))
+plot(xauusd_grp.Time2, xauusd_grp.Fun_VA/max(xauusd_grp.Fun_VA))
+
+datetick('x', 'HH:mm')
+title('Volatility vs. Time (every 15 mins)');
+xlabel('Time');
+ylabel('Volatility');
+set(gca, 'YScale', 'log');
+legend('EURUSD', 'AUDUSD', 'EURJPY', 'GBPJPY', 'GBPUSD', 'USDJPY', 'XAUUSD');
+%line([datetime('00:15', 'InputFormat', 'HH:mm'), datetime('23:45', 'InputFormat', 'HH:mm')], [0.5, 0.5], 'LineStyle', 'REPLACE_WITH_DASH_DASH');
+hold off;
+
+% Some quick observations from this figure:
+% (1) From this figure, there exists three peaks: one minor peak for the Asian
+% session, the other two correspond to the European session and the US
+% session.
+% (2) Currency pairs related to AUD and JPY are more volatile than others
+% in Asian session. and currency pair related to GBP are more volatile in
+% the European session, which is a reasonable fact.
+% (3) All currency pairs appears to have the same peak volatilities, at
+% around 12:30 pm.
+% (4) Surprisingly, gold (XAU) has the lowest volatility in the Asian and
+% the European sessions, compared to other currency pairs.
+% (5) The best time for traders to activate their trading strategies would
+% be 2:15 am EST.
+
+%%
+
+% Plot-2: Volatility vs. Year
+figure
+hold on;
+plot(eurusd_grp2.Year, eurusd_grp2.Fun_VA/max(eurusd_grp2.Fun_VA))
+plot(audusd_grp2.Year, audusd_grp2.Fun_VA/max(audusd_grp2.Fun_VA))
+plot(eurjpy_grp2.Year, eurjpy_grp2.Fun_VA/max(eurjpy_grp2.Fun_VA))
+plot(gbpjpy_grp2.Year, gbpjpy_grp2.Fun_VA/max(gbpjpy_grp2.Fun_VA))
+plot(gbpusd_grp2.Year, gbpusd_grp2.Fun_VA/max(gbpusd_grp2.Fun_VA))
+plot(usdjpy_grp2.Year, usdjpy_grp2.Fun_VA/max(usdjpy_grp2.Fun_VA))
+plot(xauusd_grp2.Year, xauusd_grp2.Fun_VA/max(xauusd_grp2.Fun_VA))
+set(gca, 'YScale', 'log');
+legend('EURUSD', 'AUDUSD', 'EURJPY', 'GBPJPY', 'GBPUSD', 'USDJPY', 'XAUUSD');
+%line([datetime('00:15', 'InputFormat', 'HH:mm'), datetime('23:45', 'InputFormat', 'HH:mm')], [0.5, 0.5], 'LineStyle', 'REPLACE_WITH_DASH_DASH');
+title('Volatility vs. Year');
+xlabel('Year');
+ylabel('Volatility');
+hold off;
+
+% What do we see in this figure:
+% (1) No doubt year 2008 was the most volitile year.
+% (2) Since then, the volatility drops significantly, especially for years
+% 2012, 2014, and 2017.
+% (3) Gold seems to have a lagging volatility compared to others, which
+% show a peak at 2011.
+
+%%
+% Plot-3: Volatility vs. Month
+figure
+hold on;
+plot(eurusd_grp3.Month, eurusd_grp3.Fun_VA/max(eurusd_grp3.Fun_VA))
+plot(audusd_grp3.Month, audusd_grp3.Fun_VA/max(audusd_grp3.Fun_VA))
+plot(eurjpy_grp3.Month, eurjpy_grp3.Fun_VA/max(eurjpy_grp3.Fun_VA))
+plot(gbpjpy_grp3.Month, gbpjpy_grp3.Fun_VA/max(gbpjpy_grp3.Fun_VA))
+plot(gbpusd_grp3.Month, gbpusd_grp3.Fun_VA/max(gbpusd_grp3.Fun_VA))
+plot(usdjpy_grp3.Month, usdjpy_grp3.Fun_VA/max(usdjpy_grp3.Fun_VA))
+plot(xauusd_grp3.Month, xauusd_grp3.Fun_VA/max(xauusd_grp3.Fun_VA))
+set(gca, 'YScale', 'log');
+title('Volatility vs. Month');
+xlabel('Month');
+ylabel('Volatility');
+legend('EURUSD', 'AUDUSD', 'EURJPY', 'GBPJPY', 'GBPUSD', 'USDJPY', 'XAUUSD');
+%line([datetime('00:15', 'InputFormat', 'HH:mm'), datetime('23:45', 'InputFormat', 'HH:mm')], [0.5, 0.5], 'LineStyle', 'REPLACE_WITH_DASH_DASH');
+hold off;
+
+% What do we see in this figure:
+% (1) Generally speaking, July and December are the months with the lowest
+% volatility, and January, June, and October seem to have the highest.
+
+%%
+% Plot-4: Volatility vs. Day within a month
+figure
+hold on;
+plot(eurusd_grp4.Day, eurusd_grp4.Fun_VA/max(eurusd_grp4.Fun_VA))
+plot(audusd_grp4.Day, audusd_grp4.Fun_VA/max(audusd_grp4.Fun_VA))
+plot(eurjpy_grp4.Day, eurjpy_grp4.Fun_VA/max(eurjpy_grp4.Fun_VA))
+plot(gbpjpy_grp4.Day, gbpjpy_grp4.Fun_VA/max(gbpjpy_grp4.Fun_VA))
+plot(gbpusd_grp4.Day, gbpusd_grp4.Fun_VA/max(gbpusd_grp4.Fun_VA))
+plot(usdjpy_grp4.Day, usdjpy_grp4.Fun_VA/max(usdjpy_grp4.Fun_VA))
+plot(xauusd_grp4.Day, xauusd_grp4.Fun_VA/max(xauusd_grp4.Fun_VA))
+set(gca, 'YScale', 'log');
+title('Volatility vs. Day');
+xlabel('Day');
+ylabel('Volatility');
+legend('EURUSD', 'AUDUSD', 'EURJPY', 'GBPJPY', 'GBPUSD', 'USDJPY', 'XAUUSD');
+%line([datetime('00:15', 'InputFormat', 'HH:mm'), datetime('23:45', 'InputFormat', 'HH:mm')], [0.5, 0.5], 'LineStyle', 'REPLACE_WITH_DASH_DASH');
+hold off;
+
+% What do we see in this figure:
+% (1) The first half of the month is often more volatile than the second
+% half.
+
+%% Part3 - Find a suitable time to start the analysis
+% (Needs further work)
+
+%% Part4 - Pattern recognition within the study time range 1
+% Using price movement
+% (Needs further work)
+
+%% Part5 - Pattern recognition within the study time range 2
+% Using MACD and other technical indicators
+% (Needs further work)
+
+%% Part6 - Apply this result to the stock market
+% (Needs further work)
+
+
+
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
